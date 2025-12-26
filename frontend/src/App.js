@@ -24,16 +24,20 @@ function App() {
 
       if (!res.ok) {
         const err = await res.json();
-        alert("Error: " + err.detail);
+        alert("Error: " + (err.detail || "Unknown error"));
         setLoading(false);
         return;
       }
 
       const data = await res.json();
-      setResults(data.results);
-    } catch {
-      alert("Backend not running");
+      // Backend might not return 'results', default to empty array
+      setResults(data.results || []);
+
+    } catch (error) {
+      console.error(error);
+      alert("Backend not running or network error");
     }
+
     setLoading(false);
   };
 
@@ -52,17 +56,21 @@ function App() {
         </button>
 
         <div className="results">
-          {results.map((r, i) => (
-            <div key={i} className="result-card bug">
-              <h3>Row {r.row}</h3>
-              <p>
-                <b>Status:</b> {r.prediction}
-              </p>
-              <p>
-                <b>Confidence:</b> {r.confidence}
-              </p>
-            </div>
-          ))}
+          {results.length > 0 ? (
+            results.map((r, i) => (
+              <div key={i} className="result-card bug">
+                <h3>Row {i + 1}</h3>
+                <p>
+                  <b>Status:</b> {r.prediction || "N/A"}
+                </p>
+                <p>
+                  <b>Confidence:</b> {r.confidence || "N/A"}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No results to display</p>
+          )}
         </div>
       </div>
     </div>
