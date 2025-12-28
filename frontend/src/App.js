@@ -1,77 +1,65 @@
+
+
+
 import React, { useState } from "react";
 import "./App.css";
 
 function App() {
   const [file, setFile] = useState(null);
-  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleUpload = async () => {
     if (!file) {
-      alert("Upload CSV file");
+      alert("Please select a CSV file");
       return;
     }
 
     setLoading(true);
+    setMessage("");
+
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/predict", {
+      const response = await fetch("http://127.0.0.1:8000/api/predict", {
         method: "POST",
         body: formData,
       });
 
-      if (!res.ok) {
-        const err = await res.json();
-        alert("Error: " + (err.detail || "Unknown error"));
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(data.detail || "Upload failed");
         setLoading(false);
         return;
       }
 
-      const data = await res.json();
-      // Backend might not return 'results', default to empty array
-      setResults(data.results || []);
+      setMessage(`✅ Success! ${data.rows_inserted} rows processed`);
 
     } catch (error) {
-      console.error(error);
-      alert("Backend not running or network error");
+      setMessage("❌ Backend not running or network error");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <div className="app">
       <div className="container">
-        <h1>SAI Bug Prediction System</h1>
+        <h1>SAI – Bug Feature Preprocessing</h1>
 
         <input
           type="file"
-          accept=".csv"
+          accept=".csv,text/csv"
           onChange={(e) => setFile(e.target.files[0])}
         />
-        <button onClick={handleUpload}>
-          {loading ? "Processing..." : "Predict"}
+
+        <button onClick={handleUpload} disabled={loading || !file}>
+          {loading ? "Processing..." : "Upload CSV"}
         </button>
 
-        <div className="results">
-          {results.length > 0 ? (
-            results.map((r, i) => (
-              <div key={i} className="result-card bug">
-                <h3>Row {i + 1}</h3>
-                <p>
-                  <b>Status:</b> {r.prediction || "N/A"}
-                </p>
-                <p>
-                  <b>Confidence:</b> {r.confidence || "N/A"}
-                </p>
-              </div>
-            ))
-          ) : (
-            <p>No results to display</p>
-          )}
-        </div>
+        {message && <p className="message">{message}</p>}
       </div>
     </div>
   );
