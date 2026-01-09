@@ -4,13 +4,14 @@ body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
   background: linear-gradient(to right, #74ebd5, #ACB6E5);
-  min-height: 100vh;
 }
 
 .app {
   display: flex;
   justify-content: center;
-  padding: 50px 20px;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
 }
 
 .container {
@@ -19,20 +20,13 @@ body {
   border-radius: 15px;
   max-width: 900px;
   width: 100%;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
 h1 {
   text-align: center;
   color: #2c3e50;
-  margin-bottom: 10px;
-}
-
-.subtitle {
-  text-align: center;
-  color: #34495e;
-  margin-bottom: 30px;
-  font-weight: 500;
+  margin-bottom: 20px;
 }
 
 input[type="file"] {
@@ -62,40 +56,84 @@ button:hover {
   background-color: #2980b9;
 }
 
-.results {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-.result-card {
-  padding: 20px;
-  border-radius: 12px;
-  background-color: #ecf0f1;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.result-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-}
-
-.result-card.bug {
-  border-left: 6px solid #e74c3c;
-  background-color: #fdecea;
-}
-
-.result-card.clean {
-  border-left: 6px solid #27ae60;
-  background-color: #eafaf1;
-}
-
-.result-card h3 {
-  margin-top: 0;
+.message {
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 20px;
   color: #2c3e50;
 }
 
-.result-card ul {
-  padding-left: 20px;
-  margin: 5px 0 0 0;
+.results {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.result-card {
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.result-card.intrinsic {
+  border: 2px solid red;
+  box-shadow: 0px 4px 8px rgba(255, 0, 0, 0.3);
+}
+
+.result-card.extrinsic {
+  border: 2px solid green;
+  box-shadow: 0px 4px 8px rgba(0, 128, 0, 0.3);
+}
+
+.result-card h3 {
+  margin: 0 0 10px 0;
+}
+
+/* ---------------- Summary Table ---------------- */
+
+.summary {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.summary h2 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.summary table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  width: 50%;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.summary th, .summary td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+.summary th {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.summary td {
+  font-weight: 500;
+}
+
+/* Color coding for summary counts */
+.summary td:nth-child(2) {
+  color: red; /* Intrinsic */
+  font-weight: 600;
+}
+
+.summary td:nth-child(3) {
+  color: green; /* Extrinsic */
+  font-weight: 600;
 }
